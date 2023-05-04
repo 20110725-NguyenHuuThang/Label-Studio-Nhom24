@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_9eabbf12df7d417d841f98e7d001f72c }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_f4b97fbc9ba44d2c85719b4ec18996f8 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_234eaa7a0a514d46bec25d72dd1a4f0c }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_b1f0259d1c0c4af3893ef75a969e62ad }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_9eabbf12df7d417d841f98e7d001f72c }}/nguyenthang211/label-studio-nhom24:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_234eaa7a0a514d46bec25d72dd1a4f0c }}/nguyenthang211/label-studio-nhom24:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'labelstudionhom24'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f957c0fdda7d4a1abbe4114b3b55dfa1 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_9eabbf12df7d417d841f98e7d001f72c }}/nguyenthang211/label-studio-nhom24:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_8e81d7700bce4c978ca905731741b97f }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_234eaa7a0a514d46bec25d72dd1a4f0c }}/nguyenthang211/label-studio-nhom24:${{ github.sha }}'
