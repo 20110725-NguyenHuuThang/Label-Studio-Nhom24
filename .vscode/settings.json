@@ -1,4 +1,0 @@
-{
-    "appService.defaultWebAppToDeploy": "undefined/subscriptions/33a95376-1b4e-4ee6-a69e-12a94168f3e7/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/label-studio-nhom24",
-    "appService.deploySubpath": "."
-}

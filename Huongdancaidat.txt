@@ -1,7 +1,0 @@
--Clone project về thông qua lệnh : git clone https://github.com/ThangNguyen211/Label-Studio-Nhom24.git
-
--Cài đặt Docker desktop để có thể sử dụng mà không cần setup gì cả.
-
--Tiến hành dẫn tới thư mục Label-Studio-Nhom24, thực hiện lệnh,chờ cho câu lệnh này chạy xong : docker-compose up -d
-
--Truy cập cục bộ project qua đường dẫn localhost: http://localhost:8080
