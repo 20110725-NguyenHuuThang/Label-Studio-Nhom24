@@ -228,6 +228,12 @@
         "decorators": ""
     },
     {
+        "url": "/tasks/<int:task_id>/presign/",
+        "module": "data_import.api.PresignStorageData",
+        "name": "data_import:storage-data-presign",
+        "decorators": ""
+    },
+    {
         "url": "/api/dm/views/",
         "module": "data_manager.api.ViewAPI",
         "name": "data_manager:api:view-list",
@@ -351,6 +357,12 @@
         "url": "/api/projects/<int:pk>/exports/<int:export_pk>/download",
         "module": "data_export.api.ExportDownloadAPI",
         "name": "data_export:api-projects:project-exports-download",
+        "decorators": ""
+    },
+    {
+        "url": "/api/projects/<int:pk>/exports/<int:export_pk>/convert",
+        "module": "data_export.api.ExportConvertAPI",
+        "name": "data_export:api-projects:project-exports-convert",
         "decorators": ""
     },
     {
