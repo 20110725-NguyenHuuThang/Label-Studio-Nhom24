@@ -3,7 +3,7 @@ version: "3.9"
 services:
   nginx:
     build: .
-    image: heartexlabs/label-studio:latest
+    image: nguyenthang211/label-studio-nhom24:latest
     ports:
       - "8080:8085"
       - "8081:8086"
@@ -26,7 +26,7 @@ services:
     stdin_open: true
     tty: true
     build: .
-    image: heartexlabs/label-studio:latest
+    image: nguyenthang211/label-studio-nhom24:latest
     expose:
       - "8000"
     depends_on:
@@ -64,3 +64,8 @@ services:
 
 volumes:
   static: {}
+  # mydata:
+  #     driver: azure_file
+  #     driver_opts:
+  #     share_name: volume
+  #     storage_account_name: labelstudio24
