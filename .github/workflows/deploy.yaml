@@ -75,21 +75,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd Label-Studio-Nhom24
-          chmod -R 755 ./deploy
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          
-          if [ ! -f /etc/docker/daemon.json ] || ! grep -q '"buildkit": true' /etc/docker/daemon.json; then
-            echo '{"features": {"buildkit": true}}' | sudo tee /etc/docker/daemon.json
-            sudo systemctl restart docker
-          fi
-          
-          sudo systemctl start docker
-          sudo systemctl enable docker
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          sudo docker-compose down
-          sudo docker-compose up
+          docker-compose down
+          docker-compose pull
+          docker-compose up -d --build
  
   start-container:
     name: Start container
