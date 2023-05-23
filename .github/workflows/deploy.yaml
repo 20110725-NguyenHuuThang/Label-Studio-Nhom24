@@ -20,7 +20,6 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          
           if [ -d "Label-Studio-Nhom24" ]; then
             cd Label-Studio-Nhom24
             git pull https://github.com/20110725-NguyenHuuThang/Label-Studio-Nhom24.git
