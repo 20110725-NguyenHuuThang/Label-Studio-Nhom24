@@ -59,8 +59,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
             sudo docker ps -a --filter ancestor=nguyenthang211/label-studio-nhom24 --format "{{.ID}}" | xargs -r sudo docker rm
-          
-          
+
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
@@ -75,6 +74,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd Label-Studio-Nhom24
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+
           docker-compose down
           docker-compose pull
           docker-compose up -d --build
