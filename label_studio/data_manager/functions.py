@@ -283,6 +283,16 @@ def get_all_columns(project, *_):
                 'explore': False,
                 'labeling': False
             }
+        }, {
+            'id': 'assigned_to',
+            'title': 'Assignee',
+            'type': 'String',
+            'target': 'tasks',
+            'help': 'Annotator assigned by manager',
+            'visibility_defaults': {
+                'explore': False,
+                'labeling': False
+            }
         }
     ]
 

@@ -8,10 +8,13 @@ from core.permissions import AllPermissions
 from core.redis import start_job_async_or_sync
 from core.utils.common import load_func
 from projects.models import Project
+from organizations.models import OrganizationMember
 
 from tasks.models import (
     Annotation, Prediction, Task
 )
+
+from users.models import User
 from webhooks.utils import emit_webhooks_for_instance
 from webhooks.models import WebhookAction
 from data_manager.functions import evaluate_predictions
@@ -127,6 +130,43 @@ def async_project_summary_recalculation(tasks_ids_list, project_id):
     project.summary.remove_data_columns(queryset)
     Task.delete_tasks_without_signals(queryset)
 
+def assign_task(project, queryset, **kwargs):
+    tasks_ids = list(queryset.values('id'))
+    request = kwargs['request']
+    assigned_id = request.data.get('assigned_id')
+    tasks_ids_list = [task['id'] for task in tasks_ids]
+    queryset = Task.objects.filter(id__in=tasks_ids_list)
+    count = queryset.count()
+
+    assigned_user = User.objects.get(id=assigned_id)
+    for task in queryset:
+        task.assign_task(assigned_user)
+        task.save()
+        
+    return {'processed_items': count, 'detail': 'Assigned ' + str(count) + ' tasks'}
+
+def get_annotator_list(user):
+    annotator= OrganizationMember.objects.filter(organization=user.active_organization, role=4)
+    list_out=[]
+    for ano in annotator:
+        temp={"label":ano.user.email, "value": str(ano.user.id)}
+        list_out.append(temp)
+    return list_out
+
+
+def assign_task_form(user, project):
+    return [{
+        'columnCount': 1,
+        'fields': [
+            {
+                'type': 'select',
+                'name': 'assigned_id',
+                'label': 'Choose annotator to assign',
+                'options': get_annotator_list(user),
+            }
+        ]
+    }]
+
 
 actions = [
     {
@@ -138,14 +178,13 @@ actions = [
             'text': 'Send the selected tasks to all ML backends connected to the project.'
                     'This operation might be abruptly interrupted due to a timeout. '
                     'The recommended way to get predictions is to update tasks using the Label Studio API.'
-                    '<a href="https://labelstud.io/guide/ml.html>See more in the documentation</a>.'
                     'Please confirm your action.',
             'type': 'confirm'
         }
     },
     {
         'entry_point': delete_tasks,
-        'permission': all_permissions.tasks_delete,
+        'permission': 'tasks.delete_task',
         'title': 'Delete Tasks',
         'order': 100,
         'reload': True,
@@ -172,6 +211,17 @@ actions = [
         'dialog': {
             'text': 'You are going to delete all predictions from the selected tasks. Please confirm your action.',
             'type': 'confirm'
+        }
+    },
+    {
+        'entry_point': assign_task,
+        'permission': 'tasks.delete_task',
+        'title': 'Assign Task',
+        'order': 103,
+        'dialog': {
+            'text': 'Assignee',
+            'type': 'confirm',
+            'form': assign_task_form
         }
     }
 ]

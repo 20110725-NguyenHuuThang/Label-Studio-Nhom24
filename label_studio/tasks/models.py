@@ -61,6 +61,9 @@ class Task(TaskMixin, models.Model):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='updated_tasks',
                                    on_delete=models.SET_NULL, null=True, verbose_name=_('updated by'),
                                    help_text='Last annotator or reviewer who updated this task')
+    assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tasks_assign',
+                                   on_delete=models.SET_NULL, null=True, verbose_name=_('assigned to'),
+                                   help_text='Last annotator or reviewer who updated this task')
     is_labeled = models.BooleanField(_('is_labeled'), default=False,
                                      help_text='True if the number of annotations for this task is greater than or equal '
                                                'to the number of maximum_completions for the project')
@@ -182,6 +185,11 @@ class Task(TaskMixin, models.Model):
     def has_permission(self, user):
         user.project = self.project  # link for activity log
         return self.project.has_permission(user)
+    
+    def assign_task(self, user):
+        if not self.project.has_collaborator(user):
+            self.project.add_collaborator(user)
+        self.assigned_to = user
 
     def clear_expired_locks(self):
         self.locks.filter(expire_at__lt=now()).delete()
@@ -234,14 +242,6 @@ class Task(TaskMixin, models.Model):
             return filename.replace(settings.MEDIA_URL, '')
         return filename
 
-    def resolve_storage_uri(self, url, project):
-        if not self.storage:
-            storage_objects = project.get_all_storage_objects(type_='import')
-            self.storage = self._get_storage_by_url(url, storage_objects)
-
-        if self.storage:
-            return self.storage.generate_http_url(url)
-
     def resolve_uri(self, task_data, project):
         if project.task_data_login and project.task_data_password:
             protected_data = {}
@@ -281,12 +281,7 @@ class Task(TaskMixin, models.Model):
                 storage = self.storage or self._get_storage_by_url(task_data[field], storage_objects)
                 if storage:
                     try:
-                        proxy_task = None
-                        if flag_set('fflag_fix_all_lsdv_4711_cors_errors_accessing_task_data_short',
-                                    self.project.organization.created_by):
-                            proxy_task = self
-
-                        resolved_uri = storage.resolve_uri(task_data[field], proxy_task)
+                        resolved_uri = storage.resolve_uri(task_data[field])
                     except Exception as exc:
                         logger.debug(exc, exc_info=True)
                         resolved_uri = None

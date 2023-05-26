@@ -44,7 +44,7 @@ const OBJECTS = {
     type: 'Audio',
   },
   AudioPlus: {
-    type: 'Audio',
+    type: 'AudioPlus',
   },
   TimeSeries: {
     type: 'TimeSeries',

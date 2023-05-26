@@ -10,7 +10,7 @@ config: |
       <Label value="Noise" />
     </Labels>
 
-    <Audio name="audio" value="$audio"/>
+    <AudioPlus name="audio" value="$audio"/>
 
     <TextArea name="transcription" toName="audio"
               rows="2" editable="true"

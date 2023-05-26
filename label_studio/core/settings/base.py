@@ -63,10 +63,6 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'WARNING',
         },
-        'ldclient.util': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-        },
     },
 }
 
